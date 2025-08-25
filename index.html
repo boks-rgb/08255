@@ -9,51 +9,357 @@
     <!-- React 18 UMD -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel (브라우저에서 JSX 변환) -->
+    <!-- Babel: 브라우저에서 JSX 변환 -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta name="color-scheme" content="light only" />
   </head>
   <body class="bg-gradient-to-b from-pink-100 via-white to-indigo-100 min-h-screen">
     <div id="root"></div>
 
-    <!-- 👇 JSX는 반드시 type="text/babel" -->
+    <!-- 앱 코드 (JSX): 반드시 type="text/babel" -->
     <script type="text/babel">
       const { useEffect, useMemo, useState } = React;
 
-      /* ----- 유틸 ----- */
-      const PALETTE = ["bg-rose-100 text-rose-600","bg-amber-100 text-amber-700","bg-emerald-100 text-emerald-700","bg-sky-100 text-sky-700","bg-violet-100 text-violet-700","bg-fuchsia-100 text-fuchsia-700","bg-teal-100 text-teal-700","bg-orange-100 text-orange-700"];
+      /* ========== 유틸 ========== */
+      const PALETTE = [
+        "bg-rose-100 text-rose-600","bg-amber-100 text-amber-700",
+        "bg-emerald-100 text-emerald-700","bg-sky-100 text-sky-700",
+        "bg-violet-100 text-violet-700","bg-fuchsia-100 text-fuchsia-700",
+        "bg-teal-100 text-teal-700","bg-orange-100 text-orange-700",
+      ];
       const colorFor = (i) => PALETTE[i % PALETTE.length];
-      const formatDate = (d) => `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+      const formatDate = (d) => `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
 
-      /* ----- 52개 미덕 (필요 시 전체 채워넣기) ----- */
+      /* ========== 52개 미덕 + 이모지 ========== */
       const VIRTUES = [
-        { key:"감사", name:"감사", easy:"받은 도움에 고마움을 표현해요", emoji:"🙏" },
-        { key:"결의", name:"결의", easy:"마음먹은 일을 끝까지 하려는 다짐이에요", emoji:"🧗" },
-        { key:"겸손", name:"겸손", easy:"잘해도 자랑하지 않고 배워요", emoji:"🙇" },
-        { key:"관용", name:"관용", easy:"다른 사람의 실수를 이해하고 용서해요", emoji:"🤝" },
-        { key:"근면", name:"근면", easy:"부지런히 할 일을 해요", emoji:"🛠️" },
-        { key:"기백함", name:"기백함", easy:"씩씩하고 당당한 태도예요", emoji:"🦁" },
-        { key:"기지", name:"기지", easy:"재치 있게 해결책을 찾아요", emoji:"🧠" },
-        { key:"끈기", name:"끈기", easy:"어려워도 포기하지 않아요", emoji:"🐢" },
-        { key:"너그러움", name:"너그러움", easy:"마음이 넓고 따뜻해요", emoji:"🤗" },
-        { key:"도움", name:"도움", easy:"먼저 나서서 도와요", emoji:"🫱‍🫲" },
-        { key:"명예", name:"명예", easy:"부끄럽지 않게 행동해요", emoji:"🏅" },
-        { key:"목적의식", name:"목적의식", easy:"왜 하는지 알고 집중해요", emoji:"🎯" },
-        { key:"믿음직함", name:"믿음직함", easy:"약속을 지켜 믿을 수 있어요", emoji:"🛡️" },
-        /* ... 나머지 39개도 같은 패턴으로 계속 ... */
+        // 1열
+        { key: "감사", name: "감사", easy: "받은 도움에 고마움을 표현해요", emoji: "🙏" },
+        { key: "결의", name: "결의", easy: "마음먹은 일을 끝까지 하려는 다짐이에요", emoji: "🧗" },
+        { key: "겸손", name: "겸손", easy: "잘해도 자랑하지 않고 배워요", emoji: "🙇" },
+        { key: "관용", name: "관용", easy: "다른 사람의 실수를 이해하고 용서해요", emoji: "🤝" },
+        { key: "근면", name: "근면", easy: "부지런히 할 일을 해요", emoji: "🛠️" },
+        { key: "기백함", name: "기백함", easy: "씩씩하고 당당한 태도예요", emoji: "🦁" },
+        { key: "기지", name: "기지", easy: "재치 있게 해결책을 찾아요", emoji: "🧠" },
+        { key: "끈기", name: "끈기", easy: "어려워도 포기하지 않아요", emoji: "🐢" },
+        { key: "너그러움", name: "너그러움", easy: "마음이 넓고 따뜻해요", emoji: "🤗" },
+        { key: "도움", name: "도움", easy: "먼저 나서서 도와요", emoji: "🫱‍🫲" },
+        { key: "명예", name: "명예", easy: "부끄럽지 않게 행동해요", emoji: "🏅" },
+        { key: "목적의식", name: "목적의식", easy: "왜 하는지 알고 집중해요", emoji: "🎯" },
+        { key: "믿음직함", name: "믿음직함", easy: "약속을 지켜 믿을 수 있어요", emoji: "🛡️" },
+        // 2열
+        { key: "배려", name: "배려", easy: "다른 사람 마음을 먼저 생각해요", emoji: "💐" },
+        { key: "봉사", name: "봉사", easy: "기꺼이 돕고 나눠요", emoji: "👐" },
+        { key: "사랑", name: "사랑", easy: "소중한 사람을 아끼고 표현해요", emoji: "❤️" },
+        { key: "사려", name: "사려", easy: "잘 생각해서 행동해요", emoji: "🤔" },
+        { key: "상냥함", name: "상냥함", easy: "부드럽고 친절하게 말해요", emoji: "😊" },
+        { key: "소신", name: "소신", easy: "옳다고 믿는 것을 당당히 말해요", emoji: "📣" },
+        { key: "신뢰", name: "신뢰", easy: "서로 믿고 의지해요", emoji: "🤝" },
+        { key: "신용", name: "신용", easy: "빌린 것은 꼭 갚아요", emoji: "📜" },
+        { key: "열정", name: "열정", easy: "마음 다해 열심히 해요", emoji: "🔥" },
+        { key: "예의", name: "예의", easy: "예의를 지켜 존중해요", emoji: "🙇‍♂️" },
+        { key: "용기", name: "용기", easy: "두려워도 바르게 행동해요", emoji: "🦊" },
+        { key: "용서", name: "용서", easy: "미움을 풀고 다시 친해져요", emoji: "🕊️" },
+        { key: "우의", name: "우의", easy: "친구 사이의 깊은 정이에요", emoji: "🫶" },
+        // 3열
+        { key: "유연성", name: "유연성", easy: "상황에 맞게 생각을 바꿀 줄 알아요", emoji: "🧘" },
+        { key: "이상추구", name: "이상추구", easy: "더 나은 나를 꿈꾸고 노력해요", emoji: "🚀" },
+        { key: "이해", name: "이해", easy: "그럴 수도 있겠다 하고 알아줘요", emoji: "🧩" },
+        { key: "인내", name: "인내", easy: "기다릴 줄 알아요", emoji: "🧘‍♂️" },
+        { key: "인내심", name: "인내심", easy: "조금씩 꾸준히 버티는 힘이에요", emoji: "⏳" },
+        { key: "자율", name: "자율", easy: "스스로 계획하고 실천해요", emoji: "🧭" },
+        { key: "절도", name: "절도", easy: "말과 행동에 단정함이 있어요", emoji: "🎩" },
+        { key: "정돈", name: "정돈", easy: "흩어진 것을 가지런히 해요", emoji: "🧺" },
+        { key: "정의로움", name: "정의로움", easy: "옳고 그름을 분명히 해요", emoji: "🏛️" },
+        { key: "정직", name: "정직", easy: "거짓말하지 않고 솔직해요", emoji: "🪞" },
+        { key: "존중", name: "존중", easy: "다른 사람을 소중히 대해요", emoji: "🙏" },
+        { key: "중용", name: "중용", easy: "치우치지 않고 고르게 해요", emoji: "⚖️" },
+        { key: "진실함", name: "진실함", easy: "마음과 말이 거짓이 없어요", emoji: "💎" },
+        // 4열
+        { key: "창의성", name: "창의성", easy: "새로운 방법을 떠올려요", emoji: "💡" },
+        { key: "책임감", name: "책임감", easy: "맡은 일을 끝까지 해요", emoji: "🧰" },
+        { key: "청결", name: "청결", easy: "주변을 깨끗이 해요", emoji: "🧼" },
+        { key: "초연", name: "초연", easy: "마음을 흔들지 않고 편안히 해요", emoji: "🕯️" },
+        { key: "충직", name: "충직", easy: "성실하고 믿음을 저버리지 않아요", emoji: "🐶" },
+        { key: "친절", name: "친절", easy: "따뜻한 말과 행동을 해요", emoji: "🌷" },
+        { key: "탁월함", name: "탁월함", easy: "더 나은 결과를 위해 한 번 더 살펴요", emoji: "🥇" },
+        { key: "평온함", name: "평온함", easy: "마음이 차분하고 안정돼요", emoji: "🕊️" },
+        { key: "한결같음", name: "한결같음", easy: "처음과 끝이 변함이 없어요", emoji: "🌿" },
+        { key: "헌신", name: "헌신", easy: "기꺼이 힘과 시간을 내어 도와요", emoji: "🎗️" },
+        { key: "협동", name: "협동", easy: "힘을 합쳐 함께해요", emoji: "🧩" },
+        { key: "화합", name: "화합", easy: "사이좋게 어울려 지내요", emoji: "🎶" },
+        { key: "확신", name: "확신", easy: "자신의 선택을 믿고 나아가요", emoji: "✅" },
       ];
 
-      /* ----- AES-GCM 저장 (HTTPS/localhost에서만 동작) ----- */
+      /* ========== AES-GCM 저장 (HTTPS/localhost 필요) ========== */
       const storageKey = "gemcards.v1";
       const SECURE = window.isSecureContext;
+
       async function getOrCreateCryptoKey() {
         const existing = localStorage.getItem("gemcards.aesKeyBase64");
         if (existing) {
-          const raw = Uint8Array.from(atob(existing), c=>c.charCodeAt(0));
-          return crypto.subtle.importKey("raw", raw, {name:"AES-GCM"}, false, ["encrypt","decrypt"]);
+          const raw = Uint8Array.from(atob(existing), c => c.charCodeAt(0));
+          return crypto.subtle.importKey("raw", raw, { name: "AES-GCM" }, false, ["encrypt","decrypt"]);
         }
         const rawKey = crypto.getRandomValues(new Uint8Array(32));
         localStorage.setItem("gemcards.aesKeyBase64", btoa(String.fromCharCode(...rawKey)));
-        return crypto.subtle.importKey("raw", rawKey, {name:"AES-GCM"}, false, ["encrypt","decrypt"]);
+        return crypto.subtle.importKey("raw", rawKey, { name: "AES-GCM" }, false, ["encrypt","decrypt"]);
       }
       async function encryptText(plain) {
-        const key = await getOrCreateCr
+        const key = await getOrCreateCryptoKey();
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const enc = new TextEncoder().encode(plain);
+        const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc);
+        return `${btoa(String.fromCharCode(...iv))}:${btoa(String.fromCharCode(...new Uint8Array(cipher)))}`;
+      }
+      async function decryptText(payload) {
+        const [ivB64, ctB64] = payload.split(":");
+        const key = await getOrCreateCryptoKey();
+        const iv = Uint8Array.from(atob(ivB64), c => c.charCodeAt(0));
+        const ct = Uint8Array.from(atob(ctB64), c => c.charCodeAt(0));
+        const buf = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ct);
+        return new TextDecoder().decode(buf);
+      }
+      const Storage = {
+        async add(card) {
+          if (!SECURE) { alert("보안 연결(HTTPS/localhost)에서만 ‘보석으로 저장’ 가능해요 (GitHub Pages 권장)"); return; }
+          const list = JSON.parse(localStorage.getItem(storageKey) || "[]");
+          const cipher = await encryptText(JSON.stringify(card));
+          list.push({ id: crypto.randomUUID(), cipher, tags: card.tags, createdAt: Date.now() });
+          localStorage.setItem(storageKey, JSON.stringify(list));
+        },
+        async list() {
+          const list = JSON.parse(localStorage.getItem(storageKey) || "[]");
+          const out = [];
+          for (const row of list) {
+            try {
+              const plain = await decryptText(row.cipher);
+              out.push({ ...row, card: JSON.parse(plain) });
+            } catch {
+              out.push({ ...row, error: true });
+            }
+          }
+          return out;
+        },
+      };
+
+      /* ========== 따뜻한 문장 3가지 ========== */
+      function warm(virtueName, name) {
+        const who = name ? `${name}님` : "너";
+        return [
+          `${who}, ${virtueName}을(를) 선택한 마음이 참 고와요.`,
+          `작은 실천이 큰 변화를 만들어요. 오늘의 ${virtueName}이 반짝여요.`,
+          `괜찮아요, 천천히 해도 좋아요. 다시 해보는 마음이 바로 ${virtueName}이에요.`,
+        ];
+      }
+
+      /* ========== UI 조각 ========== */
+      function VirtueCard({ virtue, onSelect, index }) {
+        const badge = colorFor(index);
+        return (
+          <button
+            onClick={onSelect}
+            className="flex items-center gap-3 p-4 rounded-2xl border shadow-sm hover:shadow-lg transition text-left bg-gradient-to-r from-white via-pink-50 to-indigo-50 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.8),transparent_70%)]"
+          >
+            <div className={`w-12 h-12 flex items-center justify-center rounded-full text-xl ${badge}`}>
+              <span aria-hidden>{virtue.emoji}</span>
+            </div>
+            <div>
+              <div className="font-semibold text-lg">{virtue.name}</div>
+              <div className="text-sm text-gray-600">{virtue.easy}</div>
+            </div>
+          </button>
+        );
+      }
+
+      function CardPreview({ dateStr, name, message, virtue }) {
+        return (
+          <div className="max-w-xl w-full mx-auto">
+            <div className="rounded-2xl shadow-lg p-6 bg-gradient-to-br from-white via-indigo-50 to-pink-50 border bg-[radial-gradient(circle_at_top_right,rgba(173,216,230,0.25),transparent_70%)]">
+              <div className="text-sm text-gray-500 mb-2">{dateStr}, {name || "이름 없음"}에게</div>
+              <div className="text-lg leading-relaxed whitespace-pre-wrap">{message}</div>
+              <div className="mt-4 text-right text-sm text-gray-600">(오늘의 미덕: {virtue})</div>
+            </div>
+          </div>
+        );
+      }
+
+      /* ========== 앱 ========== */
+      function App() {
+        const [step, setStep] = useState("start");            // start -> pick -> detail -> card
+        const [today] = useState(new Date());
+        const dateStr = useMemo(() => formatDate(today), [today]);
+        const [name, setName] = useState("");
+        const [virtue, setVirtue] = useState(null);
+        const [message, setMessage] = useState("");
+        const [saving, setSaving] = useState(false);
+        const [savedToast, setSavedToast] = useState(null);
+        const [savedList, setSavedList] = useState([]);
+
+        // 이름 저장/복원
+        useEffect(() => { const saved = localStorage.getItem("gemcards.name"); if (saved) setName(saved); }, []);
+        useEffect(() => { if (name) localStorage.setItem("gemcards.name", name); }, [name]);
+
+        // 저장 목록(미리보기)
+        useEffect(() => { (async () => setSavedList(await Storage.list()))(); }, [savedToast]);
+
+        const startNew = () => { setVirtue(null); setMessage(""); setStep("start"); };
+
+        return (
+          <div className="min-h-screen pb-20 bg-[radial-gradient(circle_at_bottom_right,rgba(255,182,193,0.3),transparent_70%)]">
+            <header className="sticky top-0 z-10 backdrop-blur bg-white/70 border-b">
+              <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+                <div className="font-semibold">복쓰쌤의 보석대화</div>
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="text-gray-500">{dateStr}</span>
+                  <button onClick={startNew} className="px-3 py-1 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition">오늘의 보석 시작</button>
+                </div>
+              </div>
+            </header>
+
+            <main className="max-w-3xl mx-auto px-4 pt-6">
+              {!SECURE && (
+                <div className="mb-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-3">
+                  ⚠️ 현재 보안 연결이 아닙니다. <b>GitHub Pages</b> 또는 <b>localhost</b>에서 열어야
+                  ‘보석으로 저장(암호화)’이 정상 작동해요.
+                </div>
+              )}
+              <p className="mb-4 text-xs text-gray-500">
+                이 앱은 입력 내용을 브라우저 안에만 저장하며, 서버로 전송·검색·공유하지 않아요.
+              </p>
+
+              {step === "start" && (
+                <section className="space-y-6">
+                  <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-rose-50 via-white to-indigo-50 border bg-[radial-gradient(circle_at_20%_0%,rgba(255,182,193,0.35),transparent_60%)]">
+                    <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-pink-200/40"></div>
+                    <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-indigo-200/30"></div>
+                    <div className="relative">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-white/80 border">
+                        <span aria-hidden>💎</span> 오늘의 보석 준비하기
+                      </div>
+                      <h1 className="mt-3 text-3xl font-extrabold tracking-tight">복쓰쌤의 보석대화</h1>
+                      <p className="mt-1 text-sm text-gray-600">따뜻한 한마디로 오늘을 반짝이게 해봐요 ✨</p>
+                      <div className="mt-4 text-sm text-gray-600">
+                        오늘 날짜: <strong>{dateStr}</strong>
+                      </div>
+
+                      <div className="mt-5 rounded-2xl border bg-white/80 backdrop-blur p-4">
+                        <label className="block">
+                          <span className="text-sm">내 이름</span>
+                          <input
+                            className="mt-1 w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="이름을 입력하세요"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                          />
+                        </label>
+                        <div className="mt-3 flex items-center justify-between">
+                          <p className="text-xs text-gray-500">브라우저 안에만 저장돼요. 외부 전송·검색·공유 없음.</p>
+                          <button
+                            onClick={() => setStep("pick")}
+                            className="px-5 py-3 rounded-2xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition disabled:opacity-50"
+                            disabled={!name}
+                            title={!name ? "이름을 입력해주세요" : "다음"}
+                          >
+                            다음 →
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {savedList?.length > 0 && (
+                    <div className="mt-6">
+                      <h2 className="font-semibold mb-2">최근 보석 (로컬)</h2>
+                      <ul className="grid md:grid-cols-2 gap-3">
+                        {savedList.slice(-6).reverse().map((row) => (
+                          <li key={row.id} className="rounded-xl border p-3 bg-white">
+                            <div className="text-xs text-gray-500 mb-1">{formatDate(new Date(row.createdAt))}</div>
+                            {row.card ? (
+                              <div className="text-sm">
+                                {row.card.message.substring(0, 60)}… <span className="text-gray-500">({row.card.virtueName})</span>
+                              </div>
+                            ) : (
+                              <div className="text-xs text-red-500">복호화 실패</div>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </section>
+              )}
+
+              {step === "pick" && (
+                <section>
+                  <h1 className="text-2xl font-bold mb-4">미덕 선택</h1>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    {VIRTUES.map((v, i) => (
+                      <VirtueCard
+                        key={v.key}
+                        virtue={v}
+                        index={i}
+                        onSelect={() => { setVirtue(v); setStep("detail"); }}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {step === "detail" && virtue && (
+                <section className="space-y-6">
+                  <h1 className="text-2xl font-bold">{virtue.name}</h1>
+                  <p className="text-gray-700">{virtue.easy}</p>
+                  <div>
+                    <h2 className="font-semibold mb-2">따뜻한 문장 3가지 중 선택</h2>
+                    <div className="grid gap-3">
+                      {warm(virtue.name, name).map((m, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => { setMessage(m); setStep("card"); }}
+                          className="text-left rounded-2xl border p-4 bg-white hover:shadow transition"
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {step === "card" && virtue && (
+                <section className="space-y-6">
+                  <h1 className="text-2xl font-bold">보석카드</h1>
+                  <CardPreview dateStr={dateStr} name={name} message={message} virtue={virtue.name} />
+                  <div className="flex gap-3">
+                    <button
+                      onClick={async () => {
+                        try {
+                          setSaving(true);
+                          const record = { dateStr, name, virtueKey: virtue.key, virtueName: virtue.name, message, tags: [virtue.key, virtue.name] };
+                          await Storage.add(record);
+                          alert(SECURE ? "보석으로 저장했어요 ✨" : "HTTPS/localhost에서만 저장이 가능해요.");
+                        } finally {
+                          setSaving(false);
+                        }
+                      }}
+                      className="px-5 py-3 rounded-2xl bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition disabled:opacity-50"
+                      disabled={saving}
+                    >
+                      {saving ? "저장 중…" : "보석으로 저장"}
+                    </button>
+                    <button onClick={() => { setVirtue(null); setMessage(""); setStep("start"); }} className="px-5 py-3 rounded-2xl border font-medium hover:bg-gray-50">
+                      오늘의 보석 시작
+                    </button>
+                  </div>
+                </section>
+              )}
+            </main>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
