@@ -2,26 +2,58 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>복쓰쌤의 보석대화</title>
-    <!-- TailwindCSS CDN -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React 18 + ReactDOM (UMD) -->
+    <!-- React 18 UMD -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel (JSX 변환용: 개발/학습 편의용) -->
+    <!-- Babel (브라우저에서 JSX 변환) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <meta name="color-scheme" content="light only" />
   </head>
   <body class="bg-gradient-to-b from-pink-100 via-white to-indigo-100 min-h-screen">
     <div id="root"></div>
 
+    <!-- 👇 JSX는 반드시 type="text/babel" -->
     <script type="text/babel">
       const { useEffect, useMemo, useState } = React;
 
-      // ========================= UI 색상 & 유틸 =========================
-      const PALETTE = [
-        "
+      /* ----- 유틸 ----- */
+      const PALETTE = ["bg-rose-100 text-rose-600","bg-amber-100 text-amber-700","bg-emerald-100 text-emerald-700","bg-sky-100 text-sky-700","bg-violet-100 text-violet-700","bg-fuchsia-100 text-fuchsia-700","bg-teal-100 text-teal-700","bg-orange-100 text-orange-700"];
+      const colorFor = (i) => PALETTE[i % PALETTE.length];
+      const formatDate = (d) => `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+
+      /* ----- 52개 미덕 (필요 시 전체 채워넣기) ----- */
+      const VIRTUES = [
+        { key:"감사", name:"감사", easy:"받은 도움에 고마움을 표현해요", emoji:"🙏" },
+        { key:"결의", name:"결의", easy:"마음먹은 일을 끝까지 하려는 다짐이에요", emoji:"🧗" },
+        { key:"겸손", name:"겸손", easy:"잘해도 자랑하지 않고 배워요", emoji:"🙇" },
+        { key:"관용", name:"관용", easy:"다른 사람의 실수를 이해하고 용서해요", emoji:"🤝" },
+        { key:"근면", name:"근면", easy:"부지런히 할 일을 해요", emoji:"🛠️" },
+        { key:"기백함", name:"기백함", easy:"씩씩하고 당당한 태도예요", emoji:"🦁" },
+        { key:"기지", name:"기지", easy:"재치 있게 해결책을 찾아요", emoji:"🧠" },
+        { key:"끈기", name:"끈기", easy:"어려워도 포기하지 않아요", emoji:"🐢" },
+        { key:"너그러움", name:"너그러움", easy:"마음이 넓고 따뜻해요", emoji:"🤗" },
+        { key:"도움", name:"도움", easy:"먼저 나서서 도와요", emoji:"🫱‍🫲" },
+        { key:"명예", name:"명예", easy:"부끄럽지 않게 행동해요", emoji:"🏅" },
+        { key:"목적의식", name:"목적의식", easy:"왜 하는지 알고 집중해요", emoji:"🎯" },
+        { key:"믿음직함", name:"믿음직함", easy:"약속을 지켜 믿을 수 있어요", emoji:"🛡️" },
+        /* ... 나머지 39개도 같은 패턴으로 계속 ... */
+      ];
+
+      /* ----- AES-GCM 저장 (HTTPS/localhost에서만 동작) ----- */
+      const storageKey = "gemcards.v1";
+      const SECURE = window.isSecureContext;
+      async function getOrCreateCryptoKey() {
+        const existing = localStorage.getItem("gemcards.aesKeyBase64");
+        if (existing) {
+          const raw = Uint8Array.from(atob(existing), c=>c.charCodeAt(0));
+          return crypto.subtle.importKey("raw", raw, {name:"AES-GCM"}, false, ["encrypt","decrypt"]);
+        }
+        const rawKey = crypto.getRandomValues(new Uint8Array(32));
+        localStorage.setItem("gemcards.aesKeyBase64", btoa(String.fromCharCode(...rawKey)));
+        return crypto.subtle.importKey("raw", rawKey, {name:"AES-GCM"}, false, ["encrypt","decrypt"]);
+      }
+      async function encryptText(plain) {
+        const key = await getOrCreateCr
