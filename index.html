@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>복쓰쌤의 보석대화</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React 18 + ReactDOM (UMD) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel (JSX 변환용: 개발/학습 편의용) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta name="color-scheme" content="light only" />
+  </head>
+  <body class="bg-gradient-to-b from-pink-100 via-white to-indigo-100 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useEffect, useMemo, useState } = React;
+
+      // ========================= UI 색상 & 유틸 =========================
+      const PALETTE = [
+        "
